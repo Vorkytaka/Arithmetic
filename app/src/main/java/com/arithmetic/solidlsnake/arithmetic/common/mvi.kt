@@ -20,16 +20,11 @@ interface IFeature<State, Action, Effect> {
 }
 
 class Feature<State, Action, Effect>(
-    initState: State,
-    starter: Effect?,
-    private val reducer: Reducer<State, Action, Effect>,
-    private val effectHandler: IEffectHandler<Effect, Action>
+        initState: State,
+        starter: Effect?,
+        private val reducer: Reducer<State, Action, Effect>,
+        private val effectHandler: IEffectHandler<Effect, Action>
 ) : IFeature<State, Action, Effect> {
-
-    init {
-        starter?.let(effectHandler::perform)
-        effectHandler.subscribe { it?.let(::accept) }
-    }
 
     private val listeners = HashSet<(State) -> Unit>()
     private var _state: State = initState
@@ -37,6 +32,11 @@ class Feature<State, Action, Effect>(
             listeners.forEach { it(value) }
             field = value
         }
+
+    init {
+        effectHandler.subscribe { it?.let(::accept) }
+        starter?.let(effectHandler::perform)
+    }
 
     override val currentState: State
         get() = _state
@@ -49,6 +49,7 @@ class Feature<State, Action, Effect>(
 
     override fun subscribe(listener: (State) -> Unit) {
         listeners.add(listener)
+        listener(currentState) // todo: do we need it?
     }
 
     override fun unsubscribeAll() {

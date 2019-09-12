@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="ButtonStyle">
+
+    <LinearLayout
+        android:id="@+id/button_container_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_sum_mode"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/button_selected_state"
+            android:tag="SUM"
+            android:text="+" />
+
+        <Button
+            android:id="@+id/btn_sub_mode"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/button_selected_state"
+            android:tag="SUB"
+            android:text="-" />
+
+        <Button
+            android:id="@+id/btn_multi_mode"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/button_selected_state"
+            android:tag="MULTI"
+            android:text="*" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/button_container_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button_container_1"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_ones_mode"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/button_selected_state"
+            android:tag="ONES"
+            android:text="1" />
+
+        <Button
+            android:id="@+id/btn_tens_mode"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/button_selected_state"
+            android:tag="TENS"
+            android:text="10" />
+
+        <Button
+            android:id="@+id/btn_hundreds_mode"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/button_selected_state"
+            android:tag="HUNDREDS"
+            android:text="100" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_start"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:visibility="gone" />
+
+</RelativeLayout>
