@@ -7,7 +7,7 @@ typealias Reducer<State, Action, Effect> = (State, Action) -> Pair<State, Set<Ef
 interface IEffectHandler<Effect, Action> {
     fun perform(eff: Effect)
 
-    fun subscribe(listener: (Action) -> Unit)
+    fun subscribe(listener: (Action?) -> Unit)
     fun unsubscribeAll()
 }
 
@@ -28,7 +28,7 @@ class Feature<State, Action, Effect>(
 
     init {
         starter?.let(effectHandler::perform)
-        effectHandler.subscribe(::accept)
+        effectHandler.subscribe { it?.let(::accept) }
     }
 
     private val listeners = HashSet<(State) -> Unit>()
@@ -63,10 +63,10 @@ class Feature<State, Action, Effect>(
 }
 
 abstract class ExecutorEffectHandler<Effect, Action> : IEffectHandler<Effect, Action> {
-    private val listeners = HashSet<(Action) -> Unit>()
+    private val listeners = HashSet<(Action?) -> Unit>()
     private val executors = Executors.newSingleThreadExecutor()
 
-    abstract operator fun invoke(eff: Effect): () -> Action
+    abstract operator fun invoke(eff: Effect): () -> Action?
 
     override fun perform(eff: Effect) {
         val future = executors.submit(this(eff))
@@ -74,7 +74,7 @@ abstract class ExecutorEffectHandler<Effect, Action> : IEffectHandler<Effect, Ac
         listeners.forEach { it(value) }
     }
 
-    override fun subscribe(listener: (Action) -> Unit) {
+    override fun subscribe(listener: (Action?) -> Unit) {
         listeners.add(listener)
     }
 
