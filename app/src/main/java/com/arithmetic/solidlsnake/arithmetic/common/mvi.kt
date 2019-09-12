@@ -31,16 +31,19 @@ class Feature<State, Action, Effect>(
         effectHandler.subscribe(::accept)
     }
 
-    private val listeners = ArrayList<(State) -> Unit>()
-
+    private val listeners = HashSet<(State) -> Unit>()
     private var _state: State = initState
+        set(value) {
+            listeners.forEach { it(value) }
+            field = value
+        }
 
     override val currentState: State
         get() = _state
 
     override fun accept(message: Action) {
         val (newState, effects) = reducer(_state, message)
-        listeners.forEach { it(newState) }
+        _state = newState
         handle(effects)
     }
 
@@ -60,11 +63,10 @@ class Feature<State, Action, Effect>(
 }
 
 abstract class ExecutorEffectHandler<Effect, Action> : IEffectHandler<Effect, Action> {
+    private val listeners = HashSet<(Action) -> Unit>()
     private val executors = Executors.newSingleThreadExecutor()
 
     abstract operator fun invoke(eff: Effect): () -> Action
-
-    private val listeners = ArrayList<(Action) -> Unit>()
 
     override fun perform(eff: Effect) {
         val future = executors.submit(this(eff))
