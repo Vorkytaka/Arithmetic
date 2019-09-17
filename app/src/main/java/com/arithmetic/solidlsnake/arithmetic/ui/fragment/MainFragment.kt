@@ -8,16 +8,14 @@ import com.arithmetic.solidlsnake.arithmetic.feature.MainFeature
 import com.arithmetic.solidlsnake.arithmetic.ioc.activityModule
 import kotlinx.android.synthetic.main.fragment_main.*
 
-class MainFragment : BaseFragment() {
+class MainFragment : FeatureFragment<MainFeature.State, MainFeature.Action, MainFeature.Effect>() {
 
     override val layoutId: Int = R.layout.fragment_main
 
-    private val feature = activityModule().mainFeature
+    override val feature = activityModule().mainFeature
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        feature.subscribe(::render)
 
         btn_sum_mode.setOnClickListener(::modeClickListener)
         btn_sub_mode.setOnClickListener(::modeClickListener)
@@ -29,7 +27,7 @@ class MainFragment : BaseFragment() {
         btn_start.setOnClickListener { feature.accept(MainFeature.Action.StartGame) }
     }
 
-    private fun render(state: MainFeature.State) {
+    override fun render(state: MainFeature.State) {
         btn_sum_mode.isSelected = state.modes.sum
         btn_sub_mode.isSelected = state.modes.sub
         btn_multi_mode.isSelected = state.modes.multi
