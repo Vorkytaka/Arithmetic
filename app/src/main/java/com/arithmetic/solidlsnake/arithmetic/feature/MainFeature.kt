@@ -7,14 +7,15 @@ import com.arithmetic.solidlsnake.arithmetic.common.Reducer
 import com.arithmetic.solidlsnake.arithmetic.data.Prefs
 import com.arithmetic.solidlsnake.arithmetic.entity.Mode
 import com.arithmetic.solidlsnake.arithmetic.entity.Modes
+import com.arithmetic.solidlsnake.arithmetic.ui.Router
 
 object MainFeature {
-    fun feature(prefs: Prefs): IFeature<State, Action, Effect> =
+    fun feature(prefs: Prefs, router: Router): IFeature<State, Action, Effect> =
             Feature(
                     State(Modes(ones = false, tens = false, hundreds = false, sum = false, sub = false, multi = false)),
                     MainFeature.Effect.Get,
                     reducer = reducer,
-                    effectHandler = EffectHandler(prefs)
+                    effectHandler = EffectHandler(prefs, router)
             )
 
     data class State(
@@ -35,7 +36,10 @@ object MainFeature {
         object Start : Effect()
     }
 
-    class EffectHandler(private val prefs: Prefs) : ExecutorEffectHandler<Effect, Action>() {
+    class EffectHandler(
+            private val prefs: Prefs,
+            private val router: Router
+    ) : ExecutorEffectHandler<Effect, Action>() {
         override fun invoke(eff: Effect): () -> Action? {
             return when (eff) {
                 is Effect.Save -> ({
@@ -49,7 +53,7 @@ object MainFeature {
                 })
 
                 is Effect.Start -> ({
-                    // todo: nav
+                    router.goToGameScreen()
                     null
                 })
             }
